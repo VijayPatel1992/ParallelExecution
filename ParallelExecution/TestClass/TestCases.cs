@@ -24,7 +24,6 @@ namespace ParallelExecution.TestClass
         PracticeForm _PracticeForm;
         UtilityClass _UtilityClass;
         ExcelUtility _ExcelUtility;
-        private TestContext testContext;
 
         #endregion
 
