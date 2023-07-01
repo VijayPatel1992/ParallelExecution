@@ -32,7 +32,6 @@ namespace ParallelExecution.Base
 
         public TestContext TestContext { get; set; }
 
-        private TestResult testResult;
         private static ExtentTest CurrentTestCase { get; set; }
 
         [TestInitialize]
