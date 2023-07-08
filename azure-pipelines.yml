@@ -6,7 +6,7 @@
 trigger:
 - master
 
-pool: 'UdemyPoolAgent'
+pool: 'UdemyPool'
 
 variables:
   solution: '**/*.sln'
