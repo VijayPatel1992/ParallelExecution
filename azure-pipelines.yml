@@ -6,8 +6,7 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'UdemyPoolAgent'
+pool: 'UdemyPoolAgent'
 
 variables:
   solution: '**/*.sln'
