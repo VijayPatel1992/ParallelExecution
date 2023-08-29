@@ -1,6 +1,4 @@
-﻿using AventStack.ExtentReports;
-using AventStack.ExtentReports.Reporter;
-using IronXL.Logging;
+﻿using IronXL.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using OpenQA.Selenium;
@@ -27,12 +25,12 @@ namespace ParallelExecution.Base
         public static string ScreenSortPath = Path.Combine(ReportPath, "Screenshot");
         
         public static string CreatedExcelFilePath = Path.Combine(ReportPath, "ExcelFiles");
-        private static ExtentReports ReportManager { get; set; }
+       // private static ExtentReports ReportManager { get; set; }
         public static string HtmlReportFullPath { get; set; }
 
         public TestContext TestContext { get; set; }
 
-        private static ExtentTest CurrentTestCase { get; set; }
+      //  private static ExtentTest CurrentTestCase { get; set; }
 
         [TestInitialize]
         public void InitializeTest()
@@ -55,7 +53,7 @@ namespace ParallelExecution.Base
                     }
                     else
                     {
-                        Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe");
+                        Driver = new ChromeDriver();
                         Driver.Manage().Window.Maximize();
                     }
                     break;
@@ -114,20 +112,20 @@ namespace ParallelExecution.Base
         [ClassCleanup]
         public void ReportFlush()
         {
-            ReportManager.Flush();
+            //ReportManager.Flush();
         }
 
         public  void StartReporter()
         {
-            var htmlReporter = new ExtentHtmlReporter(HtmlReportFullPath);
-            ReportManager = new ExtentReports();
-            //htmlReporter.LoadConfig(BaseClass.rootpath + "\\extent-config.xml");
-            ReportManager.AttachReporter(htmlReporter);
-            ReportManager.AddSystemInfo("Environment", "QA");
-            ReportManager.AddSystemInfo("User Name", "Vija Patel");
+            //var htmlReporter = new ExtentHtmlReporter(HtmlReportFullPath);
+            //ReportManager = new ExtentReports();
+            ////htmlReporter.LoadConfig(BaseClass.rootpath + "\\extent-config.xml");
+            //ReportManager.AttachReporter(htmlReporter);
+            //ReportManager.AddSystemInfo("Environment", "QA");
+            //ReportManager.AddSystemInfo("User Name", "Vija Patel");
             
 
-            CurrentTestCase = ReportManager.CreateTest(TestContext.TestName);
+            //CurrentTestCase = ReportManager.CreateTest(TestContext.TestName);
         }
 
 

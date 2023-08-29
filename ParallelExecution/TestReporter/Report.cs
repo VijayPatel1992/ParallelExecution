@@ -1,5 +1,4 @@
-﻿using AventStack.ExtentReports.Reporter;
-using AventStack.ExtentReports;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +10,19 @@ namespace ParallelExecution.TestReporter
     public static class Report
     {
         
-            private static ExtentReports extent;
-            private static ExtentHtmlReporter htmlReporter;
+        //    private static ExtentReports extent;
+        //    private static ExtentHtmlReporter htmlReporter;
 
-            public static ExtentReports GetInstance()
-            {
-                if (extent == null)
-                {
-                    string reportPath = @"..\..\Reports\ExtentReport.html";
-                    htmlReporter = new ExtentHtmlReporter(reportPath);
-                    extent = new ExtentReports();
-                    extent.AttachReporter(htmlReporter);
-                }
-                return extent;
-            }
+        //    public static ExtentReports GetInstance()
+        //    {
+        //        if (extent == null)
+        //        {
+        //            string reportPath = @"..\..\Reports\ExtentReport.html";
+        //            htmlReporter = new ExtentHtmlReporter(reportPath);
+        //            extent = new ExtentReports();
+        //            extent.AttachReporter(htmlReporter);
+        //        }
+        //        return extent;
+        //    }
         }
 }
