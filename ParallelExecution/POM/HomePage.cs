@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using OpenQA.Selenium;
 using ParallelExecution.TestUtility;
-using SeleniumExtras.PageObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +19,6 @@ namespace ParallelExecution.POM
         public HomePage(IWebDriver driver)
         {
             this.driver = driver;
-            PageFactory.InitElements(driver, this);
         }
 
         #endregion
@@ -92,8 +90,8 @@ namespace ParallelExecution.POM
 
         #region Elemennts
 
-        [FindsBy(How = How.XPath, Using = "//*[@id='app']/div/div/div[2]/div/div[1]/div/div[2]")]
-        private IWebElement elements { get; set; }
+        By By_elements = By.XPath("//*[@id='app']/div/div/div[2]/div/div[1]/div/div[2]");
+        public IWebElement elements => driver.FindElement(By.XPath("//*[@id='app']/div/div/div[2]/div/div[1]/div/div[2]"));
 
         #endregion
 
@@ -104,7 +102,7 @@ namespace ParallelExecution.POM
         public void ClickOnElements(IWebDriver Driver)
         {
 
-            _UtilityClass.WaitForElementToBeClickable(Driver, elements);
+            _UtilityClass.WaitForElementToBeClickable(Driver, By_elements);
 
             _UtilityClass.ScrollToElement(Driver, elements);
             elements.Click();

@@ -1,7 +1,7 @@
 ﻿using IronXL.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
-using OpenQA.Selenium;
+
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using ParallelExecution.TestReporter;
@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
 
 namespace ParallelExecution.Base
 {
@@ -35,7 +36,7 @@ namespace ParallelExecution.Base
         [TestInitialize]
         public void InitializeTest()
         {
-            //CreateReportDirectory();
+            CreateReportDirectory();
             //StartReporter();
 
             switch (Browser)
@@ -49,9 +50,11 @@ namespace ParallelExecution.Base
                         option.AddArgument("start-maximized");
                         option.AcceptInsecureCertificates = true;
                         option.AddUserProfilePreference("disable-popup-blocking", "true");
-                        Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe", option);
+                        //Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe", option);
+                        Driver = new ChromeDriver();
                     }
                     else
+                    
                     {
                         Driver = new ChromeDriver();
                         Driver.Manage().Window.Maximize();
@@ -85,6 +88,7 @@ namespace ParallelExecution.Base
                
             }
             Driver.Url = ConfigurationManager.AppSettings["URL"];
+            Driver.Manage().Window.Maximize();
             
         }
 

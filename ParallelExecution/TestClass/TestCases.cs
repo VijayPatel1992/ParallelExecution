@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using ParallelExecution.Base;
 using ParallelExecution.POM;
 using ParallelExecution.TestUtility;
@@ -18,6 +19,7 @@ namespace ParallelExecution.TestClass
     public class TestCases : BaseClass
     {
         #region Object Creation
+      
 
         HomePage _HomePage;
         ElementPage _ElementPage;
@@ -26,9 +28,9 @@ namespace ParallelExecution.TestClass
         ExcelUtility _ExcelUtility;
 
         #endregion
-
+        
         [TestMethod]
-        public void Test()
+        public void Test2_Test()
         {
             try
             {
@@ -63,8 +65,9 @@ namespace ParallelExecution.TestClass
 
         }
 
+       
         [TestMethod]
-        public void SelectValueFromDDL()
+        public void Test4_SelectValueFromDDL()
         {
             try
             {
@@ -100,9 +103,9 @@ namespace ParallelExecution.TestClass
 
         }
 
-
+        
         [TestMethod]
-        public void VerifyUploadFunctionality()
+        public void Test5_VerifyUploadFunctionality()
         {
             try
             {
@@ -134,6 +137,7 @@ namespace ParallelExecution.TestClass
                 #endregion
 
 
+
             }
             catch (Exception ex)
             {
@@ -143,8 +147,9 @@ namespace ParallelExecution.TestClass
             }
         }
 
+        
         [TestMethod]
-        public virtual void VerifyFormFunctionality()
+        public virtual void Test1_VerifyFormFunctionality()
         {
             try
             {
@@ -190,8 +195,9 @@ namespace ParallelExecution.TestClass
             }
         }
 
+        
         [TestMethod]
-        public virtual void VerifyDeleteRecordFunctionality()
+        public virtual void Test6_VerifyDeleteRecordFunctionality()
         {
             try
             {
@@ -222,8 +228,9 @@ namespace ParallelExecution.TestClass
             }
         }
 
+        
         [TestMethod]
-        public void SetExcelValue()
+        public void Test3_SetExcelValue()
         {
             string Filename = "My Data.xlsx";
             _ExcelUtility = new ExcelUtility();

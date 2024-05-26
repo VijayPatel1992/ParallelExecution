@@ -2,8 +2,6 @@
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using SeleniumExtras.PageObjects;
-using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,61 +27,54 @@ namespace ParallelExecution.POM
         public PracticeForm(IWebDriver Driver)
         {
             this.Driver = Driver;
-            PageFactory.InitElements(Driver, this);
+            
         }
 
         #endregion
 
         #region Elements
 
-        By FirstName = By.Id("firstName");
-
-        [FindsBy(How = How.Id, Using = "lastName")]
-        private IWebElement TxtBoxLastName { get; set; }
-
-        [FindsBy(How = How.Id, Using = "userEmail")]
-        private IWebElement TxtBoxUserEmail { get; set; }
+        By FirstName = By.Id("firstName");       
+        public IWebElement TxtBoxLastName => Driver.FindElement(By.Id("lastName"));
+        public IWebElement TxtBoxUserEmail => Driver.FindElement(By.Id("userEmail"));
 
         By RadioBtnGender(string Gender)
         {
             return By.XPath("//*[@id='genterWrapper']//input/../label[text() = '" + Gender + "']");
         }
 
-        [FindsBy(How = How.Id, Using = "userNumber")]
-        private IWebElement TxtBoxMobileNumber { get; set; }
 
-        [FindsBy(How = How.Id, Using = "dateOfBirthInput")]
-        private IWebElement DatePickerDateOfBirth { get; set; }
+        public IWebElement TxtBoxMobileNumber => Driver.FindElement(By.Id("userNumber"));
 
-        [FindsBy(How = How.Id, Using = "subjectsInput")]
-        private IWebElement TxtBoxSubject { get; set; }
+        public IWebElement DatePickerDateOfBirth => Driver.FindElement(By.Id("dateOfBirthInput"));
+
+        public IWebElement TxtBoxSubject => Driver.FindElement(By.Id("subjectsInput"));
+
 
         string JSPathHobbiesCheckbox(int Index)
         {
             return "return document.querySelector('#hobbiesWrapper>div div:nth-child(" + Index + ") input')"
 ;
         }
+        public IWebElement InputBoxChooseFile => Driver.FindElement(By.Id("uploadPicture"));
 
-        [FindsBy(How = How.Id, Using = "uploadPicture")]
-        private IWebElement InputBoxChooseFile { get; set; }
 
         By BtnChooseFile = By.XPath("//*[@id='uploadPicture']");
+        public IWebElement TxtBoxCurrentAddress => Driver.FindElement(By.Id("currentAddress"));
 
-        [FindsBy(How = How.Id, Using = "currentAddress")]
-        private IWebElement TxtBoxCurrentAddress { get; set; }
+        public IWebElement DDLSelectState => Driver.FindElement(By.XPath("//*[@id='state']"));
 
-        [FindsBy(How = How.XPath, Using = "//*[@id='state']")]
-        private IWebElement DDLSelectState { get; set; }
+       
 
         By DDLStateOptions = By.XPath("//*[@id='state']//div[contains(@id, 'react-select')]");
 
-        [FindsBy(How = How.XPath, Using = "//*[@id='city']")]
-        private IWebElement DDLSelectCity { get; set; }
+        public IWebElement DDLSelectCity => Driver.FindElement(By.XPath("//*[@id='city']"));
+
+        public IWebElement BtnSubmit => Driver.FindElement(By.Id("submit"));
+
 
         By DDLCityOptions = By.XPath("//*[@id='city']//div[contains(@id, 'react-select')]");
 
-        [FindsBy(How = How.XPath, Using = "//*[@id='submit']")]
-        private IWebElement BtnSubmit { get; set; }
 
         By TableFieldValue(string FieldName)
         {
@@ -102,9 +93,12 @@ namespace ParallelExecution.POM
 
             #region Fill basic details
 
+
             //Wait for First Name textbox becomes clickable and then send key.
-            BrowserWait.Until(ExpectedConditions.ElementToBeClickable(FirstName)).SendKeys(PracticeFormData.Rows[DtRowPtr]["FirstName"].ToString());
-           
+
+            
+            BrowserWait.Until(d => Driver.FindElement(FirstName)).SendKeys(PracticeFormData.Rows[DtRowPtr]["FirstName"].ToString());
+            _UtilityClass.ScrollToElement(Driver, TxtBoxLastName);
 
             //Fill value for Last Name
             TxtBoxLastName.SendKeys(PracticeFormData.Rows[DtRowPtr]["LastName"].ToString());
@@ -119,11 +113,12 @@ namespace ParallelExecution.POM
 
             //Fill value for Mobile number
             TxtBoxMobileNumber.SendKeys(PracticeFormData.Rows[DtRowPtr]["MobileNumber"].ToString());
-           
+
             #endregion
 
             #region Birth Date
-
+            _UtilityClass.ScrollToElement(Driver, DatePickerDateOfBirth);
+            Thread.Sleep(1000);
             DatePickerDateOfBirth.Click();
             _Actions.KeyDown(Keys.Control).SendKeys("A").KeyUp(Keys.Control).Build().Perform();
             DatePickerDateOfBirth.SendKeys(PracticeFormData.Rows[DtRowPtr]["DateOfBirthd"].ToString());
@@ -176,9 +171,10 @@ namespace ParallelExecution.POM
             #region File Upload
 
              WebDriverWait _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            IWebElement EleBrowseButton = _wait.Until(ExpectedConditions.ElementIsVisible(BtnChooseFile));
-
+            _wait.Until(d => Driver.FindElement(BtnChooseFile));
+            IWebElement EleBrowseButton = Driver.FindElement(By.Id("uploadPicture"));
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", EleBrowseButton);
+            //EleBrowseButton.Click();
             Thread.Sleep(2000);
             _UtilityClass.FileUploader(Path.Combine(UploadFilePath, PracticeFormData.Rows[DtRowPtr]["PicturePath"].ToString()));
 
@@ -192,15 +188,15 @@ namespace ParallelExecution.POM
             #endregion
 
             #region Select State
-
-            _Actions.KeyDown(Keys.Tab).KeyUp(Keys.Tab).Build().Perform();
-            Thread.Sleep(500);
-            _Actions.KeyDown(Keys.Space).KeyUp(Keys.Space).Build().Perform();
-            Thread.Sleep(500);
-            BrowserWait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(DDLStateOptions));
+            DDLSelectState.Click();
+            //_Actions.KeyDown(Keys.Tab).KeyUp(Keys.Tab).Build().Perform();
+            //Thread.Sleep(500);
+            //_Actions.KeyDown(Keys.Space).KeyUp(Keys.Space).Build().Perform();
+            //Thread.Sleep(500);
+            BrowserWait.Until(d => Driver.FindElement(DDLStateOptions));
             IList<IWebElement> StateOptions = Driver.FindElements(DDLStateOptions);
 
-            //IList<IWebElement> StateOptions = Driver.FindElements(By.XPath("//*[@id='state']//div[contains(@id, 'react-select')]"));
+            
             foreach (IWebElement State in StateOptions)
             {
                 if (PracticeFormData.Rows[DtRowPtr]["State"].ToString().Equals(State.Text.ToString()))
@@ -208,7 +204,7 @@ namespace ParallelExecution.POM
 
                     _UtilityClass.ScrollToElement(Driver, State);
                     Thread.Sleep(500);
-                    _UtilityClass.JavaScriptClick(Driver,State);
+                    State.Click();
                     break;
                 }
             }
@@ -216,25 +212,28 @@ namespace ParallelExecution.POM
             #endregion
 
             #region Select City
+            Thread.Sleep(3000);
             //TestUtility.UtilityClass.JavaScriptClick(DDLSelectCity);
-            //DDLSelectCity.Click();
+            DDLSelectCity.Click();
 
 
 
-            _Actions.KeyDown(Keys.Tab).KeyUp(Keys.Tab).Build().Perform();
-            Thread.Sleep(500);
-            _Actions.KeyDown(Keys.Space).KeyUp(Keys.Space).Build().Perform();
-            Thread.Sleep(500);
-            BrowserWait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(DDLCityOptions));
+            //_Actions.KeyDown(Keys.Tab).KeyUp(Keys.Tab).Build().Perform();
+            //Thread.Sleep(500);
+            //_Actions.KeyDown(Keys.Space).KeyUp(Keys.Space).Build().Perform();
+            //Thread.Sleep(500);
+            BrowserWait.Until(d => Driver.FindElement(DDLCityOptions));
             IList<IWebElement> CityOptions = Driver.FindElements(DDLCityOptions);
+
+          
 
             //IList<IWebElement> StateOptions = Driver.FindElements(By.XPath("//*[@id='state']//div[contains(@id, 'react-select')]"));
             foreach (IWebElement City in CityOptions)
             {
                 if (PracticeFormData.Rows[DtRowPtr]["City"].ToString().Equals(City.Text.ToString()))
                 {
-                    _UtilityClass.JavaScriptClick(Driver, City);
-                    //City.Click();
+                    //_UtilityClass.JavaScriptClick(Driver, City);
+                    City.Click();
                     break;
                 }
             }
@@ -242,7 +241,9 @@ namespace ParallelExecution.POM
             #endregion
 
             //Click on submie button with java script executor.
-            _UtilityClass.JavaScriptClick(Driver, BtnSubmit);
+            Thread.Sleep(3000);
+            BtnSubmit.Click();
+            
 
         }
 
@@ -250,7 +251,7 @@ namespace ParallelExecution.POM
         {
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
-            return BrowserWait.Until(ExpectedConditions.ElementIsVisible(TableFieldValue(FieldName))).Text;
+            return BrowserWait.Until(d => Driver.FindElement(TableFieldValue(FieldName))).Text;
         }
 
         #endregion

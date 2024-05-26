@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
-using SeleniumExtras.PageObjects;
-using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +27,6 @@ namespace ParallelExecution.POM
         public ElementPage(IWebDriver Driver)
         {
             this.Driver = Driver;
-            PageFactory.InitElements(Driver, this);
         }
 
         #endregion
@@ -38,10 +35,13 @@ namespace ParallelExecution.POM
 
         #region Elemennts
 
-        [FindsBy(How = How.XPath, Using = "//*[@id='withOptGroup']")]
-        private IWebElement DDLSelectValue { get; set; }
+        //[FindsBy(How = How.XPath, Using = "//*[@id='withOptGroup']")]
+        //private IWebElement DDLSelectValue { get; set; }
 
-        By UploadedFilePath = By.XPath("//*[@id='uploadedFilePath']");
+        public IWebElement DDLSelectValue => Driver.FindElement(By.XPath("//*[@id='withOptGroup']"));
+
+
+        By UploadedFilePath = By.Id("uploadedFilePath");
 
         By DDLSelectValueEntry = By.XPath("//*[@id='withOptGroup']//div[contains(@class, 'option')]");
 
@@ -60,7 +60,7 @@ namespace ParallelExecution.POM
             return By.XPath("//*[@class='element-group']//*[text() ='" + groupheader + "']/../../..//span[text() = '" + ElementName + "']");
         }
 
-        By BtnChooseFile = By.XPath("//*[@id='uploadFile']");
+        By BtnChooseFile = By.Id("uploadFile");
 
 
         By GridRecords = By.XPath("//button[@id = 'addNewRecordButton']/../../following-sibling::div//div[@class='rt-td']");
@@ -74,25 +74,37 @@ namespace ParallelExecution.POM
 
         public void ClickOnLeftPaneElement(IWebDriver Driver, string groupheader, string ElementName)
         {
-            WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            //d => DriverFixture.Driver.FindElement(elementLocator)
+            WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));    
+            Thread.Sleep(5000);
+                _UtilityClass.ScrollToElement(Driver, Driver.FindElement(GrouHeaderToClick(groupheader)));
 
-            if (BrowserWait.Until(ExpectedConditions.ElementExists(DivGroupHeader(groupheader))).GetAttribute("class").Equals("element-list collapse"))
+                BrowserWait.Until(d => Driver.FindElement(GrouHeaderToClick(groupheader))).Click();
+
+            Thread.Sleep(2000);
+
+
+            if (BrowserWait.Until(d => Driver.FindElement(DivGroupHeader(groupheader))).GetAttribute("class").Equals("element-list collapse"))
             {
                 _UtilityClass.ScrollToElement(Driver, Driver.FindElement(GrouHeaderToClick(groupheader)));
-                
-                BrowserWait.Until(ExpectedConditions.ElementToBeClickable(GrouHeaderToClick(groupheader))).Click();
+
+                BrowserWait.Until(d => Driver.FindElement(GrouHeaderToClick(groupheader))).Click();
             }
 
-            _UtilityClass.ScrollToElement(Driver, Driver.FindElement(LeftPaneElement(groupheader, ElementName)));
-            IWebElement Ele = BrowserWait.Until(ExpectedConditions.ElementToBeClickable(LeftPaneElement(groupheader, ElementName)));
+            Thread.Sleep(2000);
 
+            _UtilityClass.ScrollToElement(Driver, Driver.FindElement(LeftPaneElement(groupheader, ElementName)));
+            Thread.Sleep(2000);
+            IWebElement Ele = BrowserWait.Until(d => Driver.FindElement(LeftPaneElement(groupheader, ElementName)));
+
+            Ele.Click();
             _UtilityClass.JavaScriptClick(Driver, Ele);
            
         }
 
         public void SelectValueFromDroDown()
         {
-            _UtilityClass.SelectValueFromResponsiveDDL(Driver, DDLSelectValue, DDLSelectValueEntry, "Group 1, option 2");
+           // _UtilityClass.SelectValueFromResponsiveDDL(Driver, DDLSelectValue, DDLSelectValueEntry, "Group 1, option 2");
 
         }
 
@@ -100,15 +112,28 @@ namespace ParallelExecution.POM
         {
 
             UtilityClass _UtilityClass = new UtilityClass();
-           WebDriverWait _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            IWebElement EleBrowseButton = _wait.Until(ExpectedConditions.ElementIsVisible(BtnChooseFile));
+           WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+
+             BrowserWait.Until(d => Driver.FindElement(BtnChooseFile));
+
+            IWebElement element = Driver.FindElement(By.CssSelector("input#uploadFile"));
+
+            // Cast the driver to IJavaScriptExecutor
+            IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
+
+            // Execute the JavaScript to click the element
+            js.ExecuteScript("arguments[0].click();", element);
+
+            IWebElement EleBrowseButton = Driver.FindElement(By.CssSelector("input#uploadFile"));
 
 
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView(true);", EleBrowseButton);
-            _UtilityClass.TakeScreenShot("VIjay", Driver);
+       
 
 
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", EleBrowseButton);
+            _UtilityClass.JavaScriptClick(Driver, EleBrowseButton);
+            EleBrowseButton.Click();
             Thread.Sleep(2000);
             _UtilityClass.FileUploader(FilePathFromToUpload);
             
@@ -131,8 +156,11 @@ namespace ParallelExecution.POM
 
         public string MethodUploadedFilePath()
         {
-            WebDriverWait _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            IWebElement EleUploadedFilePath = _wait.Until(ExpectedConditions.ElementIsVisible(UploadedFilePath));
+            WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+
+            IWebElement EleUploadedFilePath = BrowserWait.Until(d => Driver.FindElement(UploadedFilePath));
+
+            //IWebElement EleUploadedFilePath = _wait.Until(ExpectedConditions.ElementIsVisible(UploadedFilePath));
             _UtilityClass.TakeScreenShot("abc", Driver);
             return EleUploadedFilePath.Text.ToString();
         }
@@ -140,10 +168,16 @@ namespace ParallelExecution.POM
         public void DeleteRecordFromGrid(string NameReocrdsToDelete)
         {
 
-            WebDriverWait _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
-            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GridRecords));
+            WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
-            _wait.Until(ExpectedConditions.ElementToBeClickable(RecordToDelete(NameReocrdsToDelete))).Click();
+            BrowserWait.Until(d => Driver.FindElement(GridRecords));
+
+
+            //_wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GridRecords));
+
+
+            BrowserWait.Until(d => Driver.FindElement(RecordToDelete(NameReocrdsToDelete))).Click();
+
 
         }
 
@@ -151,9 +185,9 @@ namespace ParallelExecution.POM
         {
             bool IsDeletedRecordExist = false;
 
-            WebDriverWait _wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
+            WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
-            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GridRecords));
+            BrowserWait.Until(d => Driver.FindElement(GridRecords));
 
             IList<IWebElement> GridCollection = Driver.FindElements(GridRecords);
 

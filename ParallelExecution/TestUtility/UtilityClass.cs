@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
 using ParallelExecution.Base;
-using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace ParallelExecution.TestUtility
 {
@@ -34,7 +34,7 @@ namespace ParallelExecution.TestUtility
             filename = filename + " " + DateTime.Now.ToString("yyyy_MM_dd-HHmmss") + ".jpeg";
             filename = Path.Combine(BaseClass.ScreenSortPath, filename);
 
-            ((ITakesScreenshot)Driver).GetScreenshot().SaveAsFile(filename, ScreenshotImageFormat.Jpeg);
+            ((ITakesScreenshot)Driver).GetScreenshot().SaveAsFile(filename);
 
             return filename;
         }
@@ -75,18 +75,21 @@ namespace ParallelExecution.TestUtility
         /// <param name="ele">Iwebelement where needs to scroll</param>
         public void JavaScriptClick(IWebDriver Driver, IWebElement ele)
         {
-            ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", ele);
+            IJavaScriptExecutor executor = (IJavaScriptExecutor)Driver;
+            executor.ExecuteScript("arguments[0].click();", ele);
         }
+
 
         /// <summary>
         /// WaitForElementToBeClickable(IWebElement ele) - Wait to Element to be Clickabel.
         /// </summary>
         /// <param name="ele">Iwebelement</param>
-        public void WaitForElementToBeClickable(IWebDriver Driver, IWebElement ele, int WaitForSeconds = 20)
+        public void WaitForElementToBeClickable(IWebDriver Driver, By ele, int WaitForSeconds = 20)
         {
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(WaitForSeconds));
 
-            BrowserWait.Until(ExpectedConditions.ElementToBeClickable(ele));
+            BrowserWait.Until(d => Driver.FindElement(ele));
+            
         }
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace ParallelExecution.TestUtility
             bool result = false;
             try
             {
-                BrowserWait.Until(ExpectedConditions.InvisibilityOfElementLocated(locator));
+                BrowserWait.Until(d=> Driver.FindElement(locator));
                 if (!result)
                     throw new WebDriverTimeoutException();
             }
@@ -108,8 +111,6 @@ namespace ParallelExecution.TestUtility
             {
                 Console.WriteLine(e.StackTrace);
                 Console.WriteLine(e.Message);
-
-
 
             }
         }
@@ -120,19 +121,19 @@ namespace ParallelExecution.TestUtility
         /// <param name="DropDown">Drop down Element to open Drop down list with click.</param>
         /// <param name="DropDownListEntriesLocator">Locator of DDL value.</param>
         /// <param name="ItemToSelect">Test of Drop down value to select.</param>
-        public void SelectValueFromResponsiveDDL(IWebDriver Driver, IWebElement DropDown, By DropDownListEntriesLocator, string ItemToSelect, int WaitForSeconds = 20)
+        public void SelectValueFromResponsiveDDL(IWebDriver Driver, By Locator_DropDown, By DropDownListEntriesLocator, string ItemToSelect, int WaitForSeconds = 20)
         {
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(WaitForSeconds));
-
+            IWebElement DropDown= Driver.FindElement(Locator_DropDown);
             //supply initial char
             ScrollToElement(Driver, DropDown);
-            WaitForElementToBeClickable(Driver, DropDown);
+            WaitForElementToBeClickable(Driver, Locator_DropDown);
             DropDown.Click();
             //dropDownList.Click();
             Thread.Sleep(2000);
 
             //wait for auto suggest list
-            BrowserWait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(DropDownListEntriesLocator));
+            BrowserWait.Until(d => Driver.FindElement(DropDownListEntriesLocator));
             IList<IWebElement> elements = Driver.FindElements(DropDownListEntriesLocator);
 
             foreach (var ele in elements)
@@ -266,22 +267,22 @@ namespace ParallelExecution.TestUtility
         /// </summary>
         /// <param name="locator">Locator for the web element.</param>
         /// <param name="SecondsToWait">Maximum seconds to wait for staleness<see/>.</param>
-        public void WaitForElementStaleness(IWebDriver Driver, IWebElement ele, int SecondsToWait = 20)
+        public void WaitForElementStaleness(IWebDriver Driver, By Loactor_ele, int SecondsToWait = 20)
         {
-            bool result = false;
-            try
-            {
-                WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(SecondsToWait));
-                result = wait.Until(ExpectedConditions.StalenessOf(ele));
-                if (!result)
-                    throw new WebDriverTimeoutException();
-            }
+            //bool result = false;
+            //try
+            //{
+            //    WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(SecondsToWait));
+            //    result = wait.Until(d => Driver.FindElement(Loactor_ele));
+            //    if (!result)
+            //        throw new WebDriverTimeoutException();
+            //}
 
-            catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
-                Console.WriteLine(e.Message);
-            }
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.StackTrace);
+            //    Console.WriteLine(e.Message);
+            //}
         }
 
 
