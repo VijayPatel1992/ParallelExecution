@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ParallelExecution.TestUtility;
+using OpenQA.Selenium.Interactions;
 
 
 namespace ParallelExecution.POM
@@ -133,7 +134,7 @@ namespace ParallelExecution.POM
 
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", EleBrowseButton);
             _UtilityClass.JavaScriptClick(Driver, EleBrowseButton);
-            EleBrowseButton.Click();
+            //EleBrowseButton.Click();
             Thread.Sleep(2000);
             _UtilityClass.FileUploader(FilePathFromToUpload);
             
@@ -177,6 +178,7 @@ namespace ParallelExecution.POM
 
 
             BrowserWait.Until(d => Driver.FindElement(RecordToDelete(NameReocrdsToDelete))).Click();
+
 
 
         }

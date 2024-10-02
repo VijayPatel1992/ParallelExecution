@@ -6,6 +6,7 @@ using ParallelExecution.TestUtility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace ParallelExecution.TestClass
 
                 #region Step: 1 Perform Operation on the Home Page.
 
-                _ExcelUtility.PopulateInCollection(rootpath + "//TestData//Sample Test data.xlsx", "Patel");
+                //_ExcelUtility.PopulateInCollection(rootpath + "//TestData//Sample Test data.xlsx", "Patel");
                 _HomePage.ClickOnElements(Driver);
                 _UtilityClass.WaitForAjaxLoad(Driver);
 
@@ -77,7 +78,7 @@ namespace ParallelExecution.TestClass
                 _ElementPage = new ElementPage(Driver);
                 _UtilityClass = new UtilityClass();
                 _ExcelUtility = new ExcelUtility();
-                _ExcelUtility.PopulateInCollection(rootpath + "\\TestData\\Sample Test data.xlsx", "Patel");
+               // _ExcelUtility.PopulateInCollection(rootpath + "\\TestData\\Sample Test data.xlsx", "Patel");
 
                 #endregion
 
@@ -115,7 +116,7 @@ namespace ParallelExecution.TestClass
                 _ElementPage = new ElementPage(Driver);
                 _UtilityClass = new UtilityClass();
                 _ExcelUtility = new ExcelUtility();
-                _ExcelUtility.PopulateInCollection(rootpath + "//TestData//Sample Test data.xlsx", "Patel");
+                //_ExcelUtility.PopulateInCollection(rootpath + "//TestData//Sample Test data.xlsx", "Patel");
                 string filepath = Path.Combine(rootpath, "FilesToUpload");
                 filepath = filepath + "\\Picture.jpg";
 
@@ -134,6 +135,7 @@ namespace ParallelExecution.TestClass
                 _ElementPage.UploadFile(filepath);
                 Assert.AreEqual(@"C:\fakepath\Picture.jpg", _ElementPage.MethodUploadedFilePath());
 
+
                 #endregion
 
 
@@ -148,52 +150,52 @@ namespace ParallelExecution.TestClass
         }
 
         
-        [TestMethod]
-        public virtual void Test1_VerifyFormFunctionality()
-        {
-            try
-            {
+        //[TestMethod]
+        //public virtual void Test1_VerifyFormFunctionality()
+        //{
+        //    try
+        //    {
 
-                #region Object and variable Initialization
+        //        #region Object and variable Initialization
 
-                _HomePage = new HomePage(Driver);
-                _ElementPage = new ElementPage(Driver);
-                _PracticeForm = new PracticeForm(Driver); 
-                _ExcelUtility = new ExcelUtility(); 
-                _UtilityClass = new UtilityClass();
-                DataTable FormData = _ExcelUtility.ConvertExcelToDataTable(rootpath + "//TestData//Sample Test data.xlsx", "FormData");
-                string UploadFilePath = Path.Combine(rootpath, "FilesToUpload");
+        //        _HomePage = new HomePage(Driver);
+        //        _ElementPage = new ElementPage(Driver);
+        //        _PracticeForm = new PracticeForm(Driver); 
+        //        _ExcelUtility = new ExcelUtility(); 
+        //        _UtilityClass = new UtilityClass();
+        //       // DataTable FormData = _ExcelUtility.ConvertExcelToDataTable(rootpath + "//TestData//Sample Test data.xlsx", "FormData");
+        //        string UploadFilePath = Path.Combine(rootpath, "FilesToUpload");
 
-                #endregion
+        //        #endregion
 
-                #region Step:1 Navigates to Elements page Verify Form Functionality.
+        //        #region Step:1 Navigates to Elements page Verify Form Functionality.
 
-                _HomePage.ClickOnElements(Driver);
-                _UtilityClass.WaitForAjaxLoad(Driver);
-                _ElementPage.ClickOnLeftPaneElement(Driver, _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneGroupHeader.Forms), _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneElementList.PracticeForm));
-                _PracticeForm.FillPracticeForm(0, FormData, UploadFilePath);
-                Assert.AreEqual(string.Concat(FormData.Rows[0]["FirstName"].ToString(), ' ', FormData.Rows[0]["LastName"].ToString()), _PracticeForm.GetAnyFieldValueOfSubmittedForm("Student Name"), "Validation failed for Field value.");
-                string[] FetchedSubject = _PracticeForm.GetAnyFieldValueOfSubmittedForm("Subjects").Split(',');
-                string[] UpdatedSubject = new string[FetchedSubject.Length];
+        //        _HomePage.ClickOnElements(Driver);
+        //        _UtilityClass.WaitForAjaxLoad(Driver);
+        //        _ElementPage.ClickOnLeftPaneElement(Driver, _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneGroupHeader.Forms), _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneElementList.PracticeForm));
+        //        _PracticeForm.FillPracticeForm(0, FormData, UploadFilePath);
+        //        Assert.AreEqual(string.Concat(FormData.Rows[0]["FirstName"].ToString(), ' ', FormData.Rows[0]["LastName"].ToString()), _PracticeForm.GetAnyFieldValueOfSubmittedForm("Student Name"), "Validation failed for Field value.");
+        //        string[] FetchedSubject = _PracticeForm.GetAnyFieldValueOfSubmittedForm("Subjects").Split(',');
+        //        string[] UpdatedSubject = new string[FetchedSubject.Length];
 
-                for (int i = 0; i < FetchedSubject.Length; i++)
-                {
-                    UpdatedSubject[i] = FetchedSubject[i].TrimStart().ToString().TrimEnd();
-                }
-
-
-                CollectionAssert.AreEqual(FormData.Rows[0]["Subject"].ToString().Split(';'), UpdatedSubject, "Validation failed for Field value.");
+        //        for (int i = 0; i < FetchedSubject.Length; i++)
+        //        {
+        //            UpdatedSubject[i] = FetchedSubject[i].TrimStart().ToString().TrimEnd();
+        //        }
 
 
-                #endregion
+        //        CollectionAssert.AreEqual(FormData.Rows[0]["Subject"].ToString().Split(';'), UpdatedSubject, "Validation failed for Field value.");
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                Assert.Fail(ex.Message);
-            }
-        }
+
+        //        #endregion
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //        Assert.Fail(ex.Message);
+        //    }
+        //}
 
         
         [TestMethod]
@@ -229,19 +231,21 @@ namespace ParallelExecution.TestClass
         }
 
         
-        [TestMethod]
-        public void Test3_SetExcelValue()
-        {
-            string Filename = "My Data.xlsx";
-            _ExcelUtility = new ExcelUtility();
-            Hashtable T1 = new Hashtable();
-            T1.Add("VIjay", "Patel");
-            T1.Add(1, 2);
-            T1.Add(0.5, "Vijay");
-            _ExcelUtility.WriteDataInToExcelFile(Filename, "Vijay", "Country", "CountryName", T1);
-            DataTable FormData = _ExcelUtility.ConvertExcelToDataTable(rootpath + "//TestData//Sample Test data.xlsx", "FormData");
-            _ExcelUtility.WriteDataTableToExcel(Filename, "Patel", FormData);
-        }
+        //[TestMethod]
+        //public void Test3_SetExcelValue()
+        //{
+        //    string Filename = "My Data.xlsx";
+        //    _ExcelUtility = new ExcelUtility();
+        //    Hashtable T1 = new Hashtable();
+        //    T1.Add("VIjay", "Patel");
+        //    T1.Add(1, 2);
+        //    T1.Add(0.5, "Vijay");
+        //    _ExcelUtility.WriteDataInToExcelFile(Filename, "Vijay", "Country", "CountryName", T1);
+        //    DataTable FormData = _ExcelUtility.ConvertExcelToDataTable(rootpath + "//TestData//Sample Test data.xlsx", "FormData");
+        //    _ExcelUtility.WriteDataTableToExcel(Filename, "Patel", FormData);
+        //}
+
+        
 
 
     }

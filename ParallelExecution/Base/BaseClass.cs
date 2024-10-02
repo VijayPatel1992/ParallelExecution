@@ -1,4 +1,4 @@
-﻿using IronXL.Logging;
+﻿//using IronXL.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 
 namespace ParallelExecution.Base
 {
@@ -49,8 +50,10 @@ namespace ParallelExecution.Base
                         option.AddArgument("--headless");
                         option.AddArgument("start-maximized");
                         option.AcceptInsecureCertificates = true;
+                        option.AddArguments(new List<string> { "--headless", "start-maximized" });
                         option.AddUserProfilePreference("disable-popup-blocking", "true");
                         //Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe", option);
+                        
                         Driver = new ChromeDriver();
                     }
                     else

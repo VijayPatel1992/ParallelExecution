@@ -89,6 +89,7 @@ namespace ParallelExecution.POM
         {
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
             Actions _Actions = new Actions(Driver);
+            //_Actions.DragAndDrop();
             IJavaScriptExecutor Js = (IJavaScriptExecutor)Driver;
 
             #region Fill basic details
