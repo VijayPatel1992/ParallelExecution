@@ -32,7 +32,7 @@ namespace ParallelExecution.Base
 
         public TestContext TestContext { get; set; }
 
-      //  private static ExtentTest CurrentTestCase { get; set; }
+        //  private static ExtentTest CurrentTestCase { get; set; }
 
         [TestInitialize]
         public void InitializeTest()
@@ -53,11 +53,11 @@ namespace ParallelExecution.Base
                         option.AddArguments(new List<string> { "--headless", "start-maximized" });
                         option.AddUserProfilePreference("disable-popup-blocking", "true");
                         //Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe", option);
-                        
+
                         Driver = new ChromeDriver();
                     }
                     else
-                    
+
                     {
                         Driver = new ChromeDriver();
                         Driver.Manage().Window.Maximize();
@@ -83,16 +83,21 @@ namespace ParallelExecution.Base
                     }
                     break;
 
-                 default:
+                default:
                     Driver = new ChromeDriver(rootpath + "\\Driver\\chromedriver.exe");
                     Driver.Manage().Window.Maximize();
                     break;
 
-               
+
             }
             Driver.Url = ConfigurationManager.AppSettings["URL"];
             Driver.Manage().Window.Maximize();
-            
+
+        }
+
+        public void GetURL()
+        {
+            string URL = ConfigurationManager.AppSettings["URL"];   
         }
 
 

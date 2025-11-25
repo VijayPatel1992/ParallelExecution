@@ -138,6 +138,7 @@ namespace ParallelExecution.POM
             Thread.Sleep(2000);
             _UtilityClass.FileUploader(FilePathFromToUpload);
             
+            
         }
 
         public void UploadFileWithAutoIt(string FilePathFromToUpload)
@@ -172,6 +173,7 @@ namespace ParallelExecution.POM
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
             BrowserWait.Until(d => Driver.FindElement(GridRecords));
+            
 
 
             //_wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GridRecords));

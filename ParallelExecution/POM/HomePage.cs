@@ -103,6 +103,7 @@ namespace ParallelExecution.POM
         {
 
             _UtilityClass.WaitForElementToBeClickable(Driver, By_elements);
+            
 
             _UtilityClass.ScrollToElement(Driver, elements);
             elements.Click();

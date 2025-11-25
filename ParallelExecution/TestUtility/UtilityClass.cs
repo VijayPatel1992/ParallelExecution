@@ -325,5 +325,14 @@ namespace ParallelExecution.TestUtility
             }
             return _element;
         }
+
+        /// <summary>
+        /// Reads the login message from Resource1.resx
+        /// </summary>
+        /// <returns>Login message string from resources</returns>
+        public string GetLoginMessageFromResource()
+        {
+            return ParallelExecution.Resource1.SuccessMessage;
+        }
     }
 }
