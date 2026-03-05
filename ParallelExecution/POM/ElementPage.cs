@@ -67,8 +67,9 @@ namespace ParallelExecution.POM
         By GridRecords = By.XPath("//button[@id = 'addNewRecordButton']/../../following-sibling::div//div[@class='rt-td']");
 
         By RecordToDelete(string RecordToDelete)
+        //*[ text() ='Vega']/parent::tr//*[@title='Delete']
         {
-            return By.XPath("//button[@id = 'addNewRecordButton']/../../following-sibling::div//div[@class='rt-td' and text() ='" + RecordToDelete + "']/parent::div//span[@title='Delete']");
+            return By.XPath("//*[text() ='" + RecordToDelete + "']/parent::tr//*[@title='Delete']");
         }
 
         #endregion
@@ -79,13 +80,13 @@ namespace ParallelExecution.POM
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));    
             Thread.Sleep(5000);
                 _UtilityClass.ScrollToElement(Driver, Driver.FindElement(GrouHeaderToClick(groupheader)));
-
-                BrowserWait.Until(d => Driver.FindElement(GrouHeaderToClick(groupheader))).Click();
+            Thread.Sleep(2000);
+            //BrowserWait.Until(d => Driver.FindElement(GrouHeaderToClick(groupheader))).Click();
 
             Thread.Sleep(2000);
+            string ClassOfElement = Driver.FindElement(DivGroupHeader(groupheader)).GetAttribute("class");
 
-
-            if (BrowserWait.Until(d => Driver.FindElement(DivGroupHeader(groupheader))).GetAttribute("class").Equals("element-list collapse"))
+            if (BrowserWait.Until(d => Driver.FindElement(DivGroupHeader(groupheader))).GetAttribute("class").Contains("collapse "))
             {
                 _UtilityClass.ScrollToElement(Driver, Driver.FindElement(GrouHeaderToClick(groupheader)));
 
@@ -98,7 +99,7 @@ namespace ParallelExecution.POM
             Thread.Sleep(2000);
             IWebElement Ele = BrowserWait.Until(d => Driver.FindElement(LeftPaneElement(groupheader, ElementName)));
 
-            Ele.Click();
+            //Ele.Click();
             _UtilityClass.JavaScriptClick(Driver, Ele);
            
         }
@@ -121,7 +122,7 @@ namespace ParallelExecution.POM
 
             // Cast the driver to IJavaScriptExecutor
             IJavaScriptExecutor js = (IJavaScriptExecutor)Driver;
-
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
             // Execute the JavaScript to click the element
             js.ExecuteScript("arguments[0].click();", element);
 
@@ -133,9 +134,9 @@ namespace ParallelExecution.POM
 
 
             ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", EleBrowseButton);
-            _UtilityClass.JavaScriptClick(Driver, EleBrowseButton);
+            //_UtilityClass.JavaScriptClick(Driver, EleBrowseButton);
             //EleBrowseButton.Click();
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             _UtilityClass.FileUploader(FilePathFromToUpload);
             
             
@@ -172,7 +173,7 @@ namespace ParallelExecution.POM
 
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
-            BrowserWait.Until(d => Driver.FindElement(GridRecords));
+            //BrowserWait.Until(d => Driver.FindElement(GridRecords));
             
 
 
@@ -191,7 +192,7 @@ namespace ParallelExecution.POM
 
             WebDriverWait BrowserWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(20));
 
-            BrowserWait.Until(d => Driver.FindElement(GridRecords));
+            //BrowserWait.Until(d => Driver.FindElement(GridRecords));
 
             IList<IWebElement> GridCollection = Driver.FindElements(GridRecords);
 

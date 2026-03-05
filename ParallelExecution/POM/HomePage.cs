@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ParallelExecution.POM
@@ -90,8 +91,8 @@ namespace ParallelExecution.POM
 
         #region Elemennts
 
-        By By_elements = By.XPath("//*[@id='app']/div/div/div[2]/div/div[1]/div/div[2]");
-        public IWebElement elements => driver.FindElement(By.XPath("//*[@id='app']/div/div/div[2]/div/div[1]/div/div[2]"));
+        By By_elements = By.XPath("//h5[text() = 'Elements']");
+        public IWebElement elements => driver.FindElement(By.XPath("//h5[text() = 'Elements']"));
 
         #endregion
 
@@ -106,6 +107,7 @@ namespace ParallelExecution.POM
             
 
             _UtilityClass.ScrollToElement(Driver, elements);
+            Thread.Sleep(2000);
             elements.Click();
 
         }
