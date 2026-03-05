@@ -11,6 +11,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static ParallelExecution.POM.HomePage;
 
@@ -85,6 +86,7 @@ namespace ParallelExecution.TestClass
                 #region Step:1 Navigates to Elements page
 
                 _HomePage.ClickOnElements(Driver);
+                Thread.Sleep(2000);
                 _ElementPage.ClickOnLeftPaneElement(Driver, _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneGroupHeader.Widgets), _UtilityClass.GetDescriptionFromEnum(EnumLeftPaneElementList.SelectMenu));
 
                 #endregion
