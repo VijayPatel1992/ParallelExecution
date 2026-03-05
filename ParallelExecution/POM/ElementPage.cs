@@ -18,16 +18,18 @@ namespace ParallelExecution.POM
 
         #region Variable initializations. 
 
-        private IWebDriver Driver;
-        UtilityClass _UtilityClass = new UtilityClass();
+        private readonly IWebDriver Driver;
+        private readonly UtilityClass _UtilityClass;
+        //UtilityClass _UtilityClass = new UtilityClass();
 
         #endregion
 
         #region Constructor
 
-        public ElementPage(IWebDriver Driver)
+        public ElementPage(IWebDriver Driver, UtilityClass utilityClass)
         {
             this.Driver = Driver;
+            _UtilityClass = utilityClass;
         }
 
         #endregion
